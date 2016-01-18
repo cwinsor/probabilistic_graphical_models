@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author cwinsor
- *
+ * This file contains a java-based implementation of the Octave-based exercise
+ * which comes as part of Lab 1 of the Coursera Stanford Graphical Probabilistic Models.
  */
-public class App04_coursera_pgm_figure_3_4 {
+public class App05_coursera_pgm_lab1_practice_from_example_octave {
 
 
-	public App04_coursera_pgm_figure_3_4() {
+	public App05_coursera_pgm_lab1_practice_from_example_octave() {
 	}
 
 	/**
@@ -25,19 +25,58 @@ public class App04_coursera_pgm_figure_3_4 {
 	 */
 	public void run() {
 
-		/* add a mapping function to the construction of a random variable - future */
-		/* a random variable instance, and a distribution instance are essentially the same thing */
-		/* the assignment of 'values' to a random variable or a distribution is replaced by the mapping function */
-		/* a joint distribution is a specific case of a random variable - in the case of a
-		 * joint distribution the overall sum is 1
-		 * a conditional distribution is a specific case of a random variable - in the case of
-		 * a conditional distribution the sum over the condition-ing variables = 1.0
-		 * There is also the third case of a random variable - an 'uncontrolled or unconstrained' type - where it
-		 * does not necessarily sum to anything.
-		 * 
-		 * Question: Definition vs instance:  Does the definition necessarily establish which of the sub-classes ?
-		 * Answer: I would think absolutely yes - the sub-class is established at the time of definition.
-		 */
+		// % FACTORS.INPUT(1) contains P(X_1)
+		//	FACTORS.INPUT(1) = struct('var', [1], 'card', [2], 'val', [0.11, 0.89]);
+		//
+		// the intent is to create a "factor" X1 which is strictly a prior with two values P(X1=x1_0)=0.11 and P(X1=x1_1)=0.89
+		RandomVariableDefinition RVDEF_X1 = new RandomVariableDefinition("RVDEF_X1", Arrays.asList("x1_0", "x1_1"));
+		LocalProbabilityModel X1 = new LocalProbabilityModel("X1");
+		X1.setTargetAndDependencies(RVDEF_X1, null);
+		X1.setValue("x0", 0.11);
+		X1.setValue("x1", 0.89);
+		System.out.println(X1.toString());
+
+
+		// % FACTORS.INPUT(2) contains P(X_2 | X_1)
+		// FACTORS.INPUT(2) = struct('var', [2, 1], 'card', [2, 2], 'val', [0.59, 0.41, 0.22, 0.78]);
+		//
+		// the intent is to create a "factor" X2 with cardinality of 2, which is conditional on X1 with cardinality of 2
+		RandomVariableDefinition RVDEF_X2 = new RandomVariableDefinition("RVDEF_X2", Arrays.asList("x2_0", "x2_1"));
+		LocalProbabilityModel X2 = new LocalProbabilityModel("X2");
+		X2.setTargetAndDependencies(RVDEF_X2, Arrays.asList(X1));
+		X2.setValue("x2_0", Arrays.asList(X1.event("x1_0")), 0.59);
+		X2.setValue("x2_1", Arrays.asList(X1.event("x1_0")), 0.41);
+		X2.setValue("x2_0", Arrays.asList(X1.event("x1_1")), 0.22);
+		X2.setValue("x2_1", Arrays.asList(X1.event("x1_1")), 0.78);
+
+
+		// % FACTORS.INPUT(3) contains P(X_3 | X_2)
+		// FACTORS.INPUT(3) = struct('var', [3, 2], 'card', [2, 2], 'val', [0.39, 0.61, 0.06, 0.94]);
+		//
+		// The intent is to create a "factor" X3 with cardinality of 2, which is conditional on X2 with cardinality of 2
+		RandomVariableDefinition RVDEF_X3 = new RandomVariableDefinition("RVDEF_X3", Arrays.asList("x3_0", "x3_1"));
+		LocalProbabilityModel X3 = new LocalProbabilityModel("X3");
+		X3.setTargetAndDependencies(RVDEF_X3, Arrays.asList(X2));
+		X3.setValue("x3_0", Arrays.asList(X2.event("x2_0")), 0.39);
+		X3.setValue("x3_1", Arrays.asList(X2.event("x2_0")), 0.61);
+		X3.setValue("x3_0", Arrays.asList(X2.event("x2_1")), 0.06);
+		X3.setValue("x3_1", Arrays.asList(X2.event("x2_1")), 0.94);
+
+		// % Factor Product
+		// % FACTORS.PRODUCT = FactorProduct(FACTORS.INPUT(1), FACTORS.INPUT(2));
+		// % The factor defined here is correct to 4 decimal places.
+		// FACTORS.PRODUCT = struct('var', [1, 2], 'card', [2, 2], 'val', [0.0649, 0.1958, 0.0451, 0.6942]);
+		//
+		// The intent is to compute the "factor product" of X_1 and X_2.
+		// Note that X_2 includes the "conditioning" variable X_1
+		// so in effect we are performing...  P(X1) * P(X2|X1) -----> P(X1,X2)
+		// or more specifically for example...   P(X1=x1_0) * P(X2=x2_0 | (X1=x1_0)) ---->  P(X1=x1_0, X2=x2_0)
+		// These have common X_1 so presumably this would be X_1 which is a 1x2 (dot) X_2 which is a 2x2  resulting in a 
+
+
+
+
+
 
 		// define random variables and events
 		RandomVariableDefinition RVDEF_DIFFICULTY = new RandomVariableDefinition("RVDEF_DIFFICULTY", Arrays.asList("d0", "d1"));
@@ -45,27 +84,6 @@ public class App04_coursera_pgm_figure_3_4 {
 		RandomVariableDefinition RVDEF_GRADE = new RandomVariableDefinition("RVDEF_GRADE", Arrays.asList("g1", "g2", "g3"));
 		RandomVariableDefinition RVDEF_LETTER = new RandomVariableDefinition("RVDEF_LETTER", Arrays.asList("l0", "l1"));
 		RandomVariableDefinition RVDEF_SAT = new RandomVariableDefinition("RVDEF_SAT", Arrays.asList("s0", "s1"));
-
-		// instance random variables
-		/* false - random variable is defined as a function on some distribution ???
-		 * Assuming that is true - the constructor should take in a mapping function as one
-		 * of the parameters.   The other parameter would be (a list of variable-defs??)
-		 * The degenerate case is to enumerate (case switch) the events and return the pre-defined value.
-		 * A number of good examples exist, but would return an Object (type TBD).
-		 */
-		//		RandomVariableInstance difficulty = new RandomVariableInstance("difficulty", RV_DEF_DIFFICULTY);
-		// here we want to set the callback function that defines the behavior
-		//	difficulty.set(difficulty.eventRef("d0"), 0.6);
-		//	difficulty.set(difficulty.eventRef("d0"), 0.4);
-		//		RandomVariableInstance intelligence = new RandomVariableInstance("intelligence", RV_DEF_INTELLIGENCE);
-		//		RandomVariableInstance grade = new RandomVariableInstance("grade", RV_DEF_GRADE);
-
-
-	//	DistributionDefinition DIST_DEF_DIFFICULTY = new DistributionDefinition("DIST_DEF_DIFFICULTY", RV_DEF_DIFFICULTY, Arrays.asList());
-	//	DistributionDefinition DIST_DEF_GRADE = new DistributionDefinition("DIST_DEF_GRADE", RV_DEF_GRADE, Arrays.asList(RV_DEF_DIFFICULTY, RV_DEF_INTELLIGENCE));
-	//	DistributionDefinition DIST_DEF_INTELLIGENCE = new DistributionDefinition("DIST_DEF_INTELLIGENCE", RV_DEF_GRADE, Arrays.asList(RV_DEF_DIFFICULTY, RV_DEF_INTELLIGENCE));
-	//	DistributionDefinition DIST_DEF_LETTER = new DistributionDefinition("DIST_DEF_LETTER", RV_DEF_LETTER, Arrays.asList(RV_DEF_GRADE));
-	//	DistributionDefinition DIST_DEF_SAT = new DistributionDefinition("DIST_DEF_SAT", RV_DEF_SAT, Arrays.asList(RV_DEF_INTELLIGENCE));
 
 
 
@@ -119,7 +137,7 @@ public class App04_coursera_pgm_figure_3_4 {
 	public static void main(String[] args) {
 
 		System.out.println("---start---");
-		App04_coursera_pgm_figure_3_4 theApp = new App04_coursera_pgm_figure_3_4();
+		App05_coursera_pgm_lab1_practice_from_example_octave theApp = new App05_coursera_pgm_lab1_practice_from_example_octave();
 		theApp.run();
 		System.out.println("---done---");
 

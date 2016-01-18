@@ -31,12 +31,14 @@ public class LocalProbabilityModelTest {
 	@Test
 	public void test() {
 
+		//////////////////////
 		// define the random variables - this in turn defines the Events
 		RandomVariableDefinition RV_DEF_X = new RandomVariableDefinition("DEF_X", Arrays.asList("x0", "x1", "x2"));
 		RandomVariableDefinition RV_DEF_Y = new RandomVariableDefinition("DEF_Y", Arrays.asList("y0", "y1"));
 		RandomVariableDefinition RV_DEF_Z = new RandomVariableDefinition("DEF_Y", Arrays.asList("z0", "z1"));
 
-		// define three distributions
+		///////////////////////////////////
+		// define the local probability models
 		LocalProbabilityModel X = new LocalProbabilityModel("X");
 		LocalProbabilityModel Y = new LocalProbabilityModel("Y");
 		LocalProbabilityModel Z = new LocalProbabilityModel("Z");
@@ -45,6 +47,7 @@ public class LocalProbabilityModelTest {
 		LocalProbabilityModel X3 = new LocalProbabilityModel("X3");
 		LocalProbabilityModel X7 = new LocalProbabilityModel("X7");
 		
+		////////////////////////////////
 		// specify target variable type, and dependencies
 		
 		// two a-priori variables - target only, no dependencies
