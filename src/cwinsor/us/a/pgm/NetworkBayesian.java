@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class NetworkBayesian extends Network {
 
-	public NetworkBayesian(String string, List<DistributionBc> asList) {
+	public NetworkBayesian(String string, List<DistributionDefinition> asList) {
 		// TODO Auto-generated constructor stub
 	}
 

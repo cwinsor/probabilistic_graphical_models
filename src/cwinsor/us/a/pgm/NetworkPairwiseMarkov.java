@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class NetworkPairwiseMarkov extends Network {
 
-	public NetworkPairwiseMarkov(String string, List<DistributionBc> asList) {
+	public NetworkPairwiseMarkov(String string, List<DistributionDefinition> asList) {
 		// TODO Auto-generated constructor stub
 	}
 

@@ -3,9 +3,9 @@ package cwinsor.us.a.pgm;
 public class Event {
 
 	String name;
-	RandomVariable parent;
+	RandomVariableInstance parent;
 	
-	public Event(String name, RandomVariable parent) {
+	public Event(String name, RandomVariableInstance parent) {
 		this.name = name;
 		this.parent = parent;
 	}
@@ -14,7 +14,7 @@ public class Event {
 		return name;
 	}
 
-	public RandomVariable getParent() {
+	public RandomVariableInstance getParent() {
 		return parent;
 	}
 }
